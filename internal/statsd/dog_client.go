@@ -14,6 +14,10 @@ type DataDogClient struct {
 	prefix string
 }
 
+
+type DataDogTags map[string]string
+
+
 func NewDataDogClient(addr string, prefix string) *DataDogClient {
 	return &DataDogClient{
 		addr:   addr,
@@ -38,23 +42,23 @@ func (c *DataDogClient) Close() error {
 	return c.conn.Close()
 }
 
-func (c *DataDogClient) Incr(stat string, count int64) error {
-	return c.send(stat, "%d|c", count)
+func (c *DataDogClient) Incr(stat string, count int64, tags map[string]string) error {
+	return c.send(stat, "%d|c", count, tags)
 }
 
-func (c *DataDogClient) Decr(stat string, count int64) error {
-	return c.send(stat, "%d|c", -count)
+func (c *DataDogClient) Decr(stat string, count int64, tags map[string]string) error {
+	return c.send(stat, "%d|c", -count, tags)
 }
 
-func (c *DataDogClient) Timing(stat string, delta int64) error {
-	return c.send(stat, "%d|ms", delta)
+func (c *DataDogClient) Timing(stat string, delta int64, tags map[string]string) error {
+	return c.send(stat, "%d|ms", delta, tags)
 }
 
-func (c *DataDogClient) Gauge(stat string, value int64) error {
-	return c.send(stat, "%d|g", value)
+func (c *DataDogClient) Gauge(stat string, value int64, tags map[string]string) error {
+	return c.send(stat, "%d|g", value, tags)
 }
 
-func (c *DataDogClient) send(stat string, format string, value int64) error {
+func (c *DataDogClient) send(stat string, format string, value int64, tags map[string]string) error {
 	if c.conn == nil {
 		return errors.New("not connected")
 	}

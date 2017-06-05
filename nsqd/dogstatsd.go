@@ -19,11 +19,11 @@ func (n *NSQD) dogStatsdLoop() {
 			client := statsd.NewDataDogClient(n.getOpts().DogStatsdAddress, n.getOpts().StatsdPrefix)
 			err := client.CreateSocket()
 			if err != nil {
-				n.logf(LOG_ERROR, "failed to create UDP socket to statsd(%s)", client)
+				n.logf(LOG_ERROR, "failed to create UDP socket to dogstatsd(%s)", client)
 				continue
 			}
 
-			n.logf(LOG_INFO, "STATSD: pushing stats to %s", client)
+			n.logf(LOG_INFO, "DOGSTATSD: pushing stats to %s", client)
 
 			stats := n.GetStats()
 			for _, topic := range stats {
@@ -36,11 +36,14 @@ func (n *NSQD) dogStatsdLoop() {
 					}
 				}
 				diff := topic.MessageCount - lastTopic.MessageCount
-				stat := fmt.Sprintf("topic.%s.message_count", topic.TopicName)
-				client.Incr(stat, int64(diff))
+				// stat := fmt.Sprintf("nsq.message_count", topic.TopicName)
+				client.Incr("nsq.message_count", int64(diff), map[string]string{
+					"topic_name": topic.TopicName,
+				})
 
-				stat = fmt.Sprintf("topic.%s.depth", topic.TopicName)
-				client.Gauge(stat, topic.Depth)
+				client.Gauge("topic.depth", topic.Depth, map[string]string{
+					"topic_name": topic.TopicName,
+				})
 
 				stat = fmt.Sprintf("topic.%s.backend_depth", topic.TopicName)
 				client.Gauge(stat, topic.BackendDepth)
