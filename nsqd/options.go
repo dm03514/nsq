@@ -59,6 +59,7 @@ type Options struct {
 
 	// statsd integration
 	StatsdAddress  string        `flag:"statsd-address"`
+	DogStatsdAddress  string     `flag:"dogstatsd-address"`
 	StatsdPrefix   string        `flag:"statsd-prefix"`
 	StatsdInterval time.Duration `flag:"statsd-interval"`
 	StatsdMemStats bool          `flag:"statsd-mem-stats"`

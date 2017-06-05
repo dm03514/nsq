@@ -120,6 +120,7 @@ func nsqdFlagSet(opts *nsqd.Options) *flag.FlagSet {
 
 	// statsd integration options
 	flagSet.String("statsd-address", opts.StatsdAddress, "UDP <addr>:<port> of a statsd daemon for pushing stats")
+	flagSet.String("dogstatsd-address", opts.StatsdAddress, "UDP <addr>:<port> of a dogstatsd daemon for pushing stats")
 	flagSet.Duration("statsd-interval", opts.StatsdInterval, "duration between pushing to statsd")
 	flagSet.Bool("statsd-mem-stats", opts.StatsdMemStats, "toggle sending memory and GC stats to statsd")
 	flagSet.String("statsd-prefix", opts.StatsdPrefix, "prefix used for keys sent to statsd (%s for host replacement)")

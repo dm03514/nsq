@@ -263,6 +263,10 @@ func (n *NSQD) Main() {
 	if n.getOpts().StatsdAddress != "" {
 		n.waitGroup.Wrap(func() { n.statsdLoop() })
 	}
+
+	if n.getOpts().DogStatsdAddress != "" {
+		n.waitGroup.Wrap(func() { n.dogStatsdLoop() })
+	}
 }
 
 type meta struct {
